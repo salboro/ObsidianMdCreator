@@ -41,19 +41,23 @@ android {
 
 dependencies {
 
+    implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.material3)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
     implementation(libs.androidx.ui.tooling.preview.android)
-    testImplementation(libs.junit)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.material3)
+    implementation(platform(libs.androidx.compose.bom))
+
     androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
     debugImplementation(libs.androidx.ui.test.manifest)
+    debugImplementation(libs.androidx.ui.tooling)
+    testImplementation(libs.junit)
 }
