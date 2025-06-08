@@ -7,6 +7,9 @@ sealed interface FeedState {
     data class FeedContent(
         val notes: List<Note>,
         val audioPermissionState: PermissionState,
+        val recordActive: Boolean,
+        val recordPart: String?,
+        val recordResult: String?,
     ): FeedState
 }
 
