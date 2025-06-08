@@ -1,5 +1,6 @@
 package com.sektorpriz.obsidianmdcreator.feed.ui
 
+import android.Manifest
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +20,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -27,9 +29,15 @@ import androidx.compose.ui.unit.dp
 import com.sektorpriz.obsidianmdcreator.R
 import com.sektorpriz.obsidianmdcreator.feed.presentation.FeedState
 import com.sektorpriz.obsidianmdcreator.feed.presentation.Note
+import com.sektorpriz.obsidianmdcreator.feed.presentation.PermissionState
+import com.sektorpriz.obsidianmdcreator.util.ui.RequestPermission
 
 @Composable
-fun FeedContent(state: FeedState.FeedContent, onRecordClick: () -> Unit) {
+fun FeedContent(
+    state: FeedState.FeedContent,
+    onRecordClick: () -> Unit,
+    onAudioPermissionRequested: (granted: Boolean) -> Unit,
+) {
     Scaffold(topBar = { AppBar() }) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
             LazyColumn {
@@ -39,6 +47,14 @@ fun FeedContent(state: FeedState.FeedContent, onRecordClick: () -> Unit) {
             }
 
             RecordButton(onRecordClick)
+        }
+
+        if (state.audioPermissionState == PermissionState.REQUESTED) {
+            val context = LocalContext.current
+            RequestPermission(
+                permission = Manifest.permission.RECORD_AUDIO,
+                onPermissionRequested = onAudioPermissionRequested,
+            )
         }
     }
 
@@ -107,8 +123,9 @@ private fun ContentPreview() {
             Note(title = "title", body = "Yasos Biba", tags = emptyList()),
             Note(title = "title2", body = "Bombordilo Crocodilo", tags = emptyList()),
             Note(title = "title3", body = "Capuccino Asssassino", tags = emptyList()),
-        )
+        ),
+        audioPermissionState = PermissionState.NOT_GRANTED
     )
 
-    FeedContent(state, {})
+    FeedContent(state, {}, {})
 }
