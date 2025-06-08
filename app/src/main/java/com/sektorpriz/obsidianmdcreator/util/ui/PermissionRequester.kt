@@ -1,8 +1,5 @@
 package com.sektorpriz.obsidianmdcreator.util.ui
 
-import android.app.Activity
-import android.content.Context
-import android.content.ContextWrapper
 import android.content.pm.PackageManager
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -20,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import com.sektorpriz.obsidianmdcreator.util.ktx.getActivity
 import kotlinx.coroutines.launch
 
 @Composable
@@ -74,10 +72,3 @@ private fun PermissionBottomSheet(
         }
     }
 }
-
-private fun Context.getActivity(): Activity =
-    when (this) {
-        is Activity -> this
-        is ContextWrapper -> baseContext.getActivity()
-        else -> error("Here is no activity wtf")
-    }
