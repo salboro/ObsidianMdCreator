@@ -13,11 +13,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sektorpriz.obsidianmdcreator.feed.presentation.FeedState
 import com.sektorpriz.obsidianmdcreator.feed.presentation.FeedViewModel
+import com.sektorpriz.obsidianmdcreator.feed.presentation.FeedViewModelFactory
 
 @Composable
-fun FeedScreen(viewModel: FeedViewModel = viewModel()) {
-    val state = viewModel.state.collectAsStateWithLifecycle().value
+fun FeedScreen() {
     val context = LocalContext.current
+    val viewModel: FeedViewModel = viewModel(factory = FeedViewModelFactory(context))
+    val state = viewModel.state.collectAsStateWithLifecycle().value
 
     when (state) {
         FeedState.Loading        -> LoadingState()
@@ -29,7 +31,7 @@ fun FeedScreen(viewModel: FeedViewModel = viewModel()) {
             }
             Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
 
-            viewModel.recordAudio(granted)
+            viewModel.handlePermissionAnswer(granted)
         }
     }
 }

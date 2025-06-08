@@ -1,6 +1,9 @@
 package com.sektorpriz.obsidianmdcreator.feed.ui
 
 import android.Manifest
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,9 +21,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -46,11 +50,18 @@ fun FeedContent(
                 }
             }
 
-            RecordButton(onRecordClick)
+            state.recordPart?.let {
+                Text("RecordPart: $it")
+            }
+
+            state.recordResult?.let {
+                Text("Result: $it")
+            }
+
+            RecordButton(onRecordClick, state.recordActive)
         }
 
         if (state.audioPermissionState == PermissionState.REQUESTED) {
-            val context = LocalContext.current
             RequestPermission(
                 permission = Manifest.permission.RECORD_AUDIO,
                 onPermissionRequested = onAudioPermissionRequested,
@@ -95,15 +106,21 @@ private fun NoteItem(note: Note) {
 }
 
 @Composable
-private fun RecordButton(onClick: () -> Unit) {
+private fun RecordButton(onClick: () -> Unit, recordActive: Boolean) {
+    val backgroundColor by animateColorAsState(
+        targetValue = if (recordActive) Color.Blue else Color.Gray,
+        animationSpec = tween(durationMillis = 300)
+    )
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
-            .size(144.dp),
+            .padding(16.dp),
         contentAlignment = Alignment.BottomCenter
     ) {
         FilledIconButton(
+            modifier = Modifier
+                .background(backgroundColor),
             onClick = onClick,
         ) {
             Icon(
@@ -124,7 +141,10 @@ private fun ContentPreview() {
             Note(title = "title2", body = "Bombordilo Crocodilo", tags = emptyList()),
             Note(title = "title3", body = "Capuccino Asssassino", tags = emptyList()),
         ),
-        audioPermissionState = PermissionState.NOT_GRANTED
+        audioPermissionState = PermissionState.NOT_GRANTED,
+        recordActive = false,
+        recordPart = "foo part",
+        recordResult = null,
     )
 
     FeedContent(state, {}, {})
